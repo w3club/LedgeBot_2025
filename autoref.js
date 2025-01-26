@@ -62,10 +62,10 @@ async function autoRegister() {
     if (proxies.length === 0) {
         log.warn('No proxies found, running without proxy...');
     }
-    const numberOfWallets = await askQuestion("How many wallets/ref do you want to create? ");
-    const refCode = await askQuestion("Enter Your Referral code example => O8Ijyqih: ");
+    const numberOfWallets = 10;
+    const refCode = "RSYJNQjI"
     for (let i = 0; i < numberOfWallets; i++) {
-        const proxy = proxies[i % proxies.length] || null;
+        const proxy = null;
         try {
             log.info(`Create and Registering Wallets: ${i + 1}/${numberOfWallets} Using Proxy:`, proxy);
             const walletDetails = createNewWallet();
@@ -83,4 +83,6 @@ async function autoRegister() {
     }
 }
 
-autoRegister()
+export { autoRegister }
+
+// autoRegister()
