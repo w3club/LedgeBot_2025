@@ -4,12 +4,12 @@ import log from './utils/logger.js'
 import { readFile, delay } from './utils/helper.js'
 import banner from './utils/banner.js';
 import LayerEdge from './utils/socket.js';
+import { autoRegister } from './autoref.js'
 
 // Function to read wallets 
 async function readWallets() {
     try {
         await fs.access("wallets.json");
-
         const data = await fs.readFile("wallets.json", "utf-8");
         return JSON.parse(data);
     } catch (err) {
@@ -60,6 +60,7 @@ async function run() {
             }
         }
         log.warn(`All Wallets have been processed, waiting 1 hours before next run...`);
+        await autoRegister()
         await delay(60 * 60);
     }
 }
