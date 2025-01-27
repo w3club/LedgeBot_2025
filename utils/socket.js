@@ -10,7 +10,7 @@ class LayerEdgeConnection {
         this.proxy = proxy;
 
         this.axiosConfig = {
-            ...(this.proxy && { httpsAgent: newAgent(this.proxy) }),
+            ...(this.proxy && { httpsAgent: newAgent(this.proxy), httpAgent: newAgent(this.proxy) }),
             timeout: 60000,
         };
 
