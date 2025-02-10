@@ -122,10 +122,10 @@ class LayerEdgeConnection {
         );
 
         if (response && response.data) {
-            logger.info("Daily Check in Result:", response.data);
+            log.info("Daily Check in Result:", response.data);
             return true;
         } else {
-            logger.error("Failed to perform daily check-in");
+            log.error("Failed to perform daily check-in");
             return false;
         }
     }
