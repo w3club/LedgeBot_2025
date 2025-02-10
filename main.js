@@ -43,6 +43,10 @@ async function run() {
             try {
                 const socket = new LayerEdge(proxy, privateKey);
                 log.info(`Processing Wallet Address: ${address} with proxy:`, proxy);
+
+                log.info(`Checking Node Status for: ${address}`);
+                await socket.dailyCheckIn();
+                
                 log.info(`Checking Node Status for: ${address}`);
                 const isRunning = await socket.checkNodeStatus();
 
@@ -52,8 +56,7 @@ async function run() {
                 }
                 log.info(`Trying to reconnect node for Wallet: ${address}`);
 
-
-                await socket.dailyCheckIn();
+                
                 
                 await socket.connectNode();
 
