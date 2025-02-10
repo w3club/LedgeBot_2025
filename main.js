@@ -51,6 +51,10 @@ async function run() {
                     await socket.stopNode();
                 }
                 log.info(`Trying to reconnect node for Wallet: ${address}`);
+
+
+                await socket.dailyCheckIn();
+                
                 await socket.connectNode();
 
                 log.info(`Checking Node Points for Wallet: ${address}`);
