@@ -36,12 +36,14 @@ async function run() {
     log.info('Starting run Program with all Wallets:', wallets.length);
 
     while (true) {
-        for (let i = 0; i < wallets.length; i += 10) { // 每次处理10个钱包
-            const batch = wallets.slice(i, i + 10); // 获取当前批次的钱包
+        const patchNumber = 100
+        for (let i = 0; i < wallets.length; i += patchNumber) { // 每次处理10个钱包
+            const batch = wallets.slice(i, i + patchNumber); // 获取当前批次的钱包
             const promises = batch.map(async (wallet) => { // 使用 Promise.all 处理批量请求
                 const proxy = proxies[i % proxies.length] || null;
                 const { address, privateKey } = wallet;
                 try {
+                    await delay(20 * 1000); // 在每个请求之间等待20秒
                     const socket = new LayerEdge(proxy, privateKey);
                     log.info(`Processing Wallet Address: ${address} with proxy:`, proxy);
                     log.info(`Checking Node Status for: ${address}`);
