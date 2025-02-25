@@ -36,38 +36,36 @@ async function run() {
     log.info('Starting run Program with all Wallets:', wallets.length);
 
     while (true) {
-        for (let i = 0; i < wallets.length; i++) {
-            const wallet = wallets[i];
-            const proxy = proxies[i % proxies.length] || null;
-            const { address, privateKey } = wallet
-            try {
-                const socket = new LayerEdge(proxy, privateKey);
-                log.info(`Processing Wallet Address: ${address} with proxy:`, proxy);
+        for (let i = 0; i < wallets.length; i += 10) { // 每次处理10个钱包
+            const batch = wallets.slice(i, i + 10); // 获取当前批次的钱包
+            const promises = batch.map(async (wallet) => { // 使用 Promise.all 处理批量请求
+                const proxy = proxies[i % proxies.length] || null;
+                const { address, privateKey } = wallet;
+                try {
+                    const socket = new LayerEdge(proxy, privateKey);
+                    log.info(`Processing Wallet Address: ${address} with proxy:`, proxy);
+                    log.info(`Checking Node Status for: ${address}`);
+                    const isRunning = await socket.checkNodeStatus();
 
-                // log.info(`Checking Node Status for: ${address}`);
-                // await socket.dailyCheckIn();
-                
-                log.info(`Checking Node Status for: ${address}`);
-                const isRunning = await socket.checkNodeStatus();
+                    if (isRunning) {
+                        log.info(`Wallet ${address} is running - trying to claim node points...`);
+                        await socket.stopNode();
+                    }
+                    log.info(`Trying to reconnect node for Wallet: ${address}`);
+                    await socket.connectNode();
 
-                if (isRunning) {
-                    log.info(`Wallet ${address} is running - trying to claim node points...`);
-                    await socket.stopNode();
+                    log.info(`Checking Node Points for Wallet: ${address}`);
+                    await socket.checkNodePoints();
+                } catch (error) {
+                    log.error(`Error Processing wallet:`, error.message);
                 }
-                log.info(`Trying to reconnect node for Wallet: ${address}`);
-
-                
-                
-                await socket.connectNode();
-
-                log.info(`Checking Node Points for Wallet: ${address}`);
-                await socket.checkNodePoints();
-            } catch (error) {
-                log.error(`Error Processing wallet:`, error.message);
-            }
+            });
+            await Promise.all(promises); // 等待当前批次的所有请求完成
+            log.warn(`Processed batch of ${batch.length} wallets, waiting 1 minute before next batch...`);
+            await delay(60 * 1000); // 等待1分钟
         }
         log.warn(`All Wallets have been processed, waiting 1 hours before next run...`);
-        await autoRegister()
+        await autoRegister();
         await delay(60 * 60);
     }
 }
