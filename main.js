@@ -43,7 +43,7 @@ async function run() {
                 const proxy = proxies[i % proxies.length] || null;
                 const { address, privateKey } = wallet;
                 try {
-                    await delay(20 * 1000); // 在每个请求之间等待20秒
+                    await delay(20); // 在每个请求之间等待20秒
                     const socket = new LayerEdge(proxy, privateKey);
                     log.info(`Processing Wallet Address: ${address} with proxy:`, proxy);
                     log.info(`Checking Node Status for: ${address}`);
