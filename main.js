@@ -64,7 +64,7 @@ async function run() {
             });
             await Promise.all(promises); // 等待当前批次的所有请求完成
             log.warn(`Processed batch of ${batch.length} wallets, waiting 1 minute before next batch...`);
-            await delay(60 * 1000); // 等待1分钟
+            await delay(60); // 等待1分钟
         }
         log.warn(`All ${wallets.length} wallets have been processed, waiting 1 hours before next run...`);
         await autoRegister();
