@@ -64,7 +64,7 @@ async function run() {
             log.warn(`Processed batch of ${batch.length} wallets, waiting 1 minute before next batch...`);
             await delay(60 * 1000); // 等待1分钟
         }
-        log.warn(`All Wallets have been processed, waiting 1 hours before next run...`);
+        log.warn(`All ${wallets.length} wallets have been processed, waiting 1 hours before next run...`);
         await autoRegister();
         await delay(60 * 60);
     }
